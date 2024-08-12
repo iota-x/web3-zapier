@@ -1,6 +1,4 @@
-// src/index.ts
 import express from 'express';
-
 import { registerUser, loginUser, getUserById } from './controllers/userController';
 import {
     createWorkflow,
@@ -22,39 +20,38 @@ import {
     deleteAction,
 } from './controllers/actionController';
 import { createLog, getLogsByWorkflowId, getAllLogs } from './controllers/logController';
-import { errorHandler } from './middlewares/errorHandler'; // Assuming you have an error handler middleware
+import { errorHandler } from './middlewares/errorHandler';
+import { authMiddleware } from './middlewares/authMiddleware'; // Import the auth middleware
 
 const app = express();
 app.use(express.json()); // For parsing JSON bodies
 
-// User Management Routes
+// Public Routes (No Auth Required)
 app.post('/users/register', registerUser);
 app.post('/users/login', loginUser);
-app.get('/users/:id', getUserById);
 
-// Workflow Management Routes
-app.post('/workflows', createWorkflow);
-app.get('/workflows', getAllWorkflows);
-app.get('/workflows/:id', getWorkflowById);
-app.put('/workflows/:id', updateWorkflow);
-app.delete('/workflows/:id', deleteWorkflow);
+// Protected Routes (Auth Required)
+app.get('/users/:id', authMiddleware, getUserById);
 
-// Trigger Management Routes
-app.post('/triggers', createTrigger);
-app.get('/triggers', getAllTriggers);
-app.put('/triggers/:id', updateTrigger);
-app.delete('/triggers/:id', deleteTrigger);
+app.post('/workflows', authMiddleware, createWorkflow);
+app.get('/workflows', authMiddleware, getAllWorkflows);
+app.get('/workflows/:id', authMiddleware, getWorkflowById);
+app.put('/workflows/:id', authMiddleware, updateWorkflow);
+app.delete('/workflows/:id', authMiddleware, deleteWorkflow);
 
-// Action Management Routes
-app.post('/actions', createAction);
-app.get('/actions', getAllActions);
-app.put('/actions/:id', updateAction);
-app.delete('/actions/:id', deleteAction);
+app.post('/triggers', authMiddleware, createTrigger);
+app.get('/triggers', authMiddleware, getAllTriggers);
+app.put('/triggers/:id', authMiddleware, updateTrigger);
+app.delete('/triggers/:id', authMiddleware, deleteTrigger);
 
-// Log Management Routes
-app.post('/logs', createLog);
-app.get('/logs/:workflowId', getLogsByWorkflowId);
-app.get('/logs', getAllLogs);
+app.post('/actions', authMiddleware, createAction);
+app.get('/actions', authMiddleware, getAllActions);
+app.put('/actions/:id', authMiddleware, updateAction);
+app.delete('/actions/:id', authMiddleware, deleteAction);
+
+app.post('/logs', authMiddleware, createLog);
+app.get('/logs/:workflowId', authMiddleware, getLogsByWorkflowId);
+app.get('/logs', authMiddleware, getAllLogs);
 
 // Global error handling middleware
 app.use(errorHandler);
