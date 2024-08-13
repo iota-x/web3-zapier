@@ -1,8 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables
 
 const prisma = new PrismaClient();
+
+console.log("JWT_SECRET:", process.env.JWT_SECRET); // This should print your secret key
 
 export const registerUser = async (email: string, password: string) => {
     const hashedPassword = await bcrypt.hash(password, 10);

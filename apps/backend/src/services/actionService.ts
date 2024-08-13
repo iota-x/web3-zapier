@@ -2,7 +2,7 @@ import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const createAction = async (workflowId: string, type: string, config: Prisma.InputJsonValue) => {
+export const createAction = async (type: string, config: Prisma.InputJsonValue, workflowId: string) => {
     return await prisma.action.create({
         data: {
             type,

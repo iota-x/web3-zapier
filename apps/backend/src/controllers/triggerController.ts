@@ -3,11 +3,9 @@ import * as triggerService from '../services/triggerService';
 
 export const createTrigger = async (req: Request, res: Response) => {
   try {
-    const trigger = await triggerService.createTrigger(
-      req.body.type, 
-      req.body.config, 
-      req.body.workflowId
-    );
+    const { type, config, workflowId } = req.body;
+
+    const trigger = await triggerService.createTrigger(type, config, workflowId);
     res.status(201).json(trigger);
   } catch (error) {
     if (error instanceof Error) {

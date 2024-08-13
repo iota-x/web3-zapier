@@ -2,15 +2,17 @@ import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const createTrigger = async (workflowId: string, type: string, config: Prisma.InputJsonValue) => {
+export const createTrigger = async (type: string, config: Prisma.InputJsonValue, workflowId: string) => {
+
     return await prisma.trigger.create({
         data: {
             type,
-            config,
-            workflowId,
+            config,      
+            workflowId,  
         },
     });
 };
+
 
 export const getAllTriggers = async (workflowId: string) => {
     return await prisma.trigger.findMany({ where: { workflowId } });

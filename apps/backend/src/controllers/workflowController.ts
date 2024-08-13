@@ -4,9 +4,9 @@ import * as workflowService from '../services/workflowService';
 export const createWorkflow = async (req: Request, res: Response) => {
   try {
     const workflow = await workflowService.createWorkflow(
+      req.body.userId,
       req.body.name, 
-      req.body.description, 
-      req.body.userId
+      req.body.description
     );
     res.status(201).json(workflow);
   } catch (error) {
